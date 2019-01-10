@@ -1,0 +1,38 @@
+body {
+  padding: 50px;
+  font: 14px 'Lucida Grande', Helvetica, Arial, sans-serif;
+}
+
+a {
+}
+
+ul.hIndex {
+  margin-top: 20px;
+  padding: 0;
+  list-style: none;
+
+  li {
+    padding: 5px;
+    display: inline;
+
+    a {
+      text-decoration: none;
+    }
+
+    a:active {
+      color: red;
+    }
+
+    a, a:link, a:visited {
+      color: #00b7ff;
+    }
+  }
+
+  li:first-child {
+    padding-left: 0;
+  }
+
+  li:last-child {
+    padding-right: 0;
+  }
+}

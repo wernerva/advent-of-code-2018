@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const level1 = require('../levels/level1');
+const level2 = require('../levels/level2');
 
 router.get('/:level', function (req, res) {
     const level = req.params.level;
@@ -11,6 +12,10 @@ router.get('/:level', function (req, res) {
         case '01':
             solution1 = level1.solve1();
             solution2 = level1.solve2();
+            break;
+        case '02':
+            solution1 = level2.solve1();
+            solution2 = level2.solve2();
             break;
         default:
             break;
