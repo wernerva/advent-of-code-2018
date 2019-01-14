@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const level1 = require('../levels/level1');
-const level2 = require('../levels/level2');
-const level3 = require('../levels/level3');
+const level1 = require('../lib/levels/level1');
+const level2 = require('../lib/levels/level2');
+const level3 = require('../lib/levels/level3');
 
 router.get('/:level/:subLevel', function(req, res) {
     const level = req.params.level;
