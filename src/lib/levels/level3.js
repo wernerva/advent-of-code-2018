@@ -1,8 +1,8 @@
 'use strict';
-
+Object.defineProperty(exports, "__esModule", { value: true });
 class Level3 {
-    static get level3_input() {
-        return [
+    constructor() {
+        this.input = [
             '#1 @ 393,863: 11x29',
             '#2 @ 675,133: 15x26',
             '#3 @ 690,605: 25x22',
@@ -1237,87 +1237,60 @@ class Level3 {
             '#1232 @ 23,641: 17x13',
             '#1233 @ 437,811: 19x10'
         ];
+        this.material = new Rectangle(0, 0, 0, 1000, 1000);
     }
-
-    static get material() {
-        if (!this._material) {
-            this._material = new Rectangle(0, 0, 0, 1000, 1000);
-        }
-
-        return this._material;
-    }
-
-    static solve1() {
+    solve1() {
         let totalOverlappingArea = 0;
         const claims = [];
-
-        this.level3_input.forEach(i => claims.push(this.parseRectangle(i)));
-
+        this.input.forEach(i => claims.push(this.parseRectangle(i)));
         for (let x = 0; x < this.material.width; x++) {
             for (let y = 0; y < this.material.height; y++) {
                 const rect = new Rectangle(0, x, y, 1, 1);
                 let count = 0;
-
                 for (let c = 0; c < claims.length; c++) {
                     if (claims[c].testIntersect(rect)) {
                         count++;
                     }
                 }
-
                 if (count > 1) {
                     totalOverlappingArea++;
                 }
             }
         }
-
         return totalOverlappingArea.toString();
     }
-
-    static solve2() {
-        for (let i = 0; i < this.level3_input.length; i++) {
-            const claimA = this.parseRectangle(this.level3_input[i]);
+    solve2() {
+        for (let i = 0; i < this.input.length; i++) {
+            const claimA = this.parseRectangle(this.input[i]);
             let intersectCount = 0;
-
-            for (let j = 0; j < this.level3_input.length; j++) {
-                const claimB = this.parseRectangle(this.level3_input[j]);
-
+            for (let j = 0; j < this.input.length; j++) {
+                const claimB = this.parseRectangle(this.input[j]);
                 if (claimA.id === claimB.id) {
                     continue;
                 }
-
                 const intersect = claimA.testIntersect(claimB);
-
                 if (intersect) {
                     intersectCount++;
                 }
             }
-
             if (intersectCount === 0) {
                 return claimA.id.toString();
             }
         }
-
         return 'not found';
     }
-
-    static parseRectangle(input) {
+    parseRectangle(input) {
         const claimRegex = /^#(\d+) @ (\d+),(\d+): (\d+)x(\d+)$/gi;
         const match = claimRegex.exec(input);
-
         if (match) {
-            return new Rectangle(
-                parseInt(match[1]),
-                parseInt(match[2]),
-                parseInt(match[3]),
-                parseInt(match[4]),
-                parseInt(match[5])
-            );
+            return new Rectangle(parseInt(match[1], 10), parseInt(match[2], 10), parseInt(match[3], 10), parseInt(match[4], 10), parseInt(match[5], 10));
         }
-
-        return undefined;
+        else {
+            throw new Error(`Invalid input. Could not parse '${input}'.`);
+        }
     }
 }
-
+exports.Level3 = Level3;
 class Rectangle {
     constructor(id, x, y, width, height) {
         this._id = id;
@@ -1328,53 +1301,39 @@ class Rectangle {
         this._width = width;
         this._height = height;
     }
-
     get id() {
         return this._id;
     }
-
     get xMin() {
         return this._xMin;
     }
-
     get yMin() {
         return this._yMin;
     }
-
     get xMax() {
         return this._xMax;
     }
-
     get yMax() {
         return this._yMax;
     }
-
     get width() {
         return this._width;
     }
-
     get height() {
         return this._height;
     }
-
     get area() {
         return this._width * this._height;
     }
-
     testIntersect(otherClaim) {
-        return (
-            otherClaim.xMax > this._xMin &&
+        return (otherClaim.xMax > this._xMin &&
             otherClaim.xMin < this._xMax &&
             otherClaim.yMax > this._yMin &&
-            otherClaim.yMin < this._yMax
-        );
+            otherClaim.yMin < this._yMax);
     }
-
     toString() {
-        return `#${this._id} @ ${this._xMin},${this._yMin}: ${this._width}x${
-            this._height
-        }`;
+        return `#${this._id} @ ${this._xMin},${this._yMin}: ${this._width}x${this._height}`;
     }
 }
-
-module.exports = Level3;
+exports.Rectangle = Rectangle;
+//# sourceMappingURL=level3.js.map
