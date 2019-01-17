@@ -2,16 +2,15 @@
 <html>
 <head>
     <title>Advent of Code 2018 - Solution for day <%= lvl %> part
-        <% subLvl %>
+        <%= subLvl %>
     </title>
     <link rel='stylesheet' href='/stylesheets/style.css'/>
 </head>
 <body>
-<h1>Advent of Code 2018 - Solution for day <%= lvl %> part
-    <% subLvl %>
+<h1>Advent of Code 2018 - Solution for day <%= lvl %> part <%= subLvl %>
 </h1>
-<p><b>Solution 1:</b> <%= solution %></p>
-<% if (subLvl === '1') { %><a href="./2">Part 2</a>
+<p><b>Solution 1:</b> <%- solution %></p>
+<% if (subLvl === 1) { %><a href="./2">Part 2</a>
 <% } else { %><a href="./1">Part 1</a>
 <% } %>
 | <a href="../../..">Back to index</a>

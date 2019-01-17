@@ -1,14 +1,9 @@
 import { BaseRoute } from './baseRoute';
 import { NextFunction, Request, Response, Router } from 'express';
-import { ILevel } from '../lib/levels/iLevel';
-import { Level1 } from '../lib/levels/level1';
-import { Level2 } from '../lib/levels/level2';
-import { Level3 } from '../lib/levels/level3';
+import { ILevel, Level1, Level2, Level3, Level4 } from '../lib/levels';
 
 export class SolveRoute extends BaseRoute {
     public static create(router: Router) {
-        console.log('Create solve route');
-
         router.get(
             '/solve/:level/:subLevel',
             (req: Request, res: Response, next: NextFunction) => {
@@ -44,6 +39,9 @@ export class SolveRoute extends BaseRoute {
                 break;
             case 3:
                 lvlClass = new Level3();
+                break;
+            case 4:
+                lvlClass = new Level4();
                 break;
             default:
                 lvlClass = <ILevel>{
