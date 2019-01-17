@@ -11,7 +11,9 @@ function rd(path: string) {
     }
 }
 
-rd('dist/public/stylesheets');
-shell.cp('-r', 'src/public/stylesheets', 'dist/public/stylesheets');
+rd('dist/lib/input');
+shell.cp('-r', 'src/lib/input', 'dist/lib/input');
+rd('dist/public');
+shell.cp('-r', 'src/public', 'dist/public');
 rd('dist/views');
 shell.cp('-r', 'src/views', 'dist/views');
