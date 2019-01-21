@@ -2,7 +2,6 @@
 
 import { ILevel } from './iLevel';
 import { LevelBase } from './levelBase';
-import Timeout = NodeJS.Timeout;
 
 export class Level5 extends LevelBase implements ILevel {
     public readonly input: string;
