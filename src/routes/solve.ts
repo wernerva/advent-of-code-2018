@@ -1,7 +1,6 @@
 import { BaseRoute } from './baseRoute';
 import { NextFunction, Request, Response, Router } from 'express';
-import { ILevel, Level1, Level2, Level3, Level4 } from '../lib/levels';
-import { Level5 } from '../lib/levels/level5';
+import { ILevel, Level1, Level2, Level3, Level4, Level5, Level6 } from '../lib/levels/';
 
 export class SolveRoute extends BaseRoute {
     public static create(router: Router) {
@@ -46,6 +45,9 @@ export class SolveRoute extends BaseRoute {
                 break;
             case 5:
                 lvlClass = new Level5();
+                break;
+            case 6:
+                lvlClass = new Level6();
                 break;
             default:
                 lvlClass = <ILevel>{
