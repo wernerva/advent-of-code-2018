@@ -1,7 +1,5 @@
 import { ILevel } from './iLevel';
 import { LevelBase } from './levelBase';
-import { strict } from 'assert';
-import { debuglog } from 'util';
 
 export class Level7 extends LevelBase implements ILevel {
     public readonly input: string[];
@@ -52,70 +50,49 @@ export class Level7 extends LevelBase implements ILevel {
     }
 
     public solve2(): string {
-        const resultArr: string[] = [];
-        const instructionArr: Instruction[] = this.inputToInstructionArray(60); // convert input to array of Instruction
+        const instructionArr: TimedInstruction[] = this.inputToTimedInstructionArray(60); // convert input to array of
+        const maxWorkers = 5;
         const requiredLength = instructionArr.length;
-        let availableInstructions: Instruction[];
-        const maxJobs = 5;
-        const workInProgress: Instruction[] = [];
-        let finishedWork: Instruction[] = [];
-        let counter = 0;
+        let workers: TimedInstruction[] = [];
+        let timeTaken = 0;
+        let shortestTime = 0;
+        let result = '';
+        let log = '<br />';
 
-        const getWorkInProgress = function(): void {
-            availableInstructions = instructionArr
-                .filter(i => i.isAvailable && !workInProgress.some(wip => wip.id === i.id))
-                .splice(0, maxJobs - workInProgress.length);
-
-            availableInstructions.forEach(i => {
-                console.log(`${counter}s: ${i.id} started`);
-                workInProgress.push(i);
-                workInProgress.sort((a, b) => (a.id > b.id ? 1 : a.id < b.id ? -1 : 0));
-            });
-
-            console.log(`${counter}s: ${workInProgress.length} workers [${workInProgress.map(i => i.id).join(', ')}]`);
+        const getAvailableInstruction = function(count: number): TimedInstruction[] {
+            return instructionArr
+                .filter(i => i.isAvailable && !i.done && workers.findIndex(w => w.id === i.id) === -1)
+                .splice(0, count);
         };
 
-        // start looping until the result array length equals the number of instructions
-        while (resultArr.length < requiredLength) {
-            finishedWork = [];
-            getWorkInProgress();
-            counter++;
+        while (result.length < requiredLength) {
+            workers.push(...getAvailableInstruction(maxWorkers - workers.length));
+            workers.sort((a, b) => a.timeLeft - b.timeLeft);
+            shortestTime = workers[0].timeLeft;
+            timeTaken += shortestTime;
 
-            for (let wipIdx = 0, len = workInProgress.length; wipIdx < len; wipIdx++) {
-                const idx = instructionArr.findIndex(i => i.id === workInProgress[wipIdx].id);
+            for (let i = 0, l = workers.length; i < l; i++) {
+                workers[i].addTime(shortestTime);
 
-                instructionArr[idx].tick();
-
-                if (instructionArr[idx].done) {
-                    console.log(`${counter}s: ${workInProgress[wipIdx].id} finished`);
-
-                    // add the Instruction ID to the result array
-                    resultArr.push(instructionArr[idx].id);
-
-                    // update prerequisites
-                    instructionArr.forEach(i => {
-                        const insId = instructionArr[idx].id;
-
-                        if (i.prerequisites[insId] !== undefined) {
-                            i.prerequisites[insId] = true;
-                        }
-                    });
-
-                    // remove the instruction from the array - we're done with it
-                    finishedWork.push(instructionArr.splice(idx, 1)[0]);
+                if (workers[i].timeLeft === 0) {
+                    result += workers[i].id;
                 }
             }
 
-            // remove from work in progress
-            finishedWork.forEach(fw => {
-                workInProgress.splice(workInProgress.findIndex(wip => fw.id === wip.id), 1);
-            });
+            log +=
+                '<div>' +
+                `</div><div style="display: inline-block; width: 50px; text-align: right;">${timeTaken}: &nbsp;</div>` +
+                `<div style="display: inline-block; width: 70px;">${workers.map(i => i.id).join(' ')}</div>` +
+                `<div style="display: inline-block; width: 500px;"> =&gt; ${result}</div>` +
+                '</div>';
+
+            workers = workers.filter(w => !w.done);
         }
 
-        return `time: ${counter}, order: ${resultArr.join('')}`;
+        return log;
     }
 
-    private inputToInstructionArray(defaultTimeToComplete: number = 0): Instruction[] {
+    private inputToInstructionArray(): Instruction[] {
         const instructionArr: Instruction[] = [];
 
         this.input.forEach(i => {
@@ -134,7 +111,7 @@ export class Level7 extends LevelBase implements ILevel {
             idx = instructionArr.findIndex(ins => ins.id === rule.instruction);
 
             if (idx === -1) {
-                instruction = new Instruction(rule.instruction, defaultTimeToComplete);
+                instruction = new Instruction(rule.instruction);
                 instruction.prerequisites[rule.prerequisite] = false;
                 instructionArr.push(instruction);
             } else {
@@ -144,9 +121,69 @@ export class Level7 extends LevelBase implements ILevel {
             idx = instructionArr.findIndex(ins => ins.id === rule.prerequisite);
 
             if (idx === -1) {
-                instruction = new Instruction(rule.prerequisite, defaultTimeToComplete);
+                instruction = new Instruction(rule.prerequisite);
                 instructionArr.push(instruction);
             }
+        });
+
+        instructionArr.sort((a, b) => (a.id > b.id ? 1 : a.id < b.id ? -1 : 0));
+
+        return instructionArr;
+    }
+
+    private inputToTimedInstructionArray(defaultTimeTaken: number): TimedInstruction[] {
+        const instructionArr: TimedInstruction[] = [];
+
+        this.input.forEach(i => {
+            const regex = /([a-z]) must be finished before step ([a-z])/gi;
+            const matches = regex.exec(i);
+            let rule: { prerequisite: string; instruction: string };
+            let idx: number;
+            let instruction: TimedInstruction;
+            let prerequisite: TimedInstruction;
+
+            if (!matches || matches.length !== 3) {
+                throw new Error(`'${i}' is not a valid instruction.`);
+            }
+
+            rule = { prerequisite: matches[1], instruction: matches[2] };
+
+            idx = instructionArr.findIndex(ins => ins.id === rule.instruction);
+
+            if (idx === -1) {
+                instruction = new TimedInstruction(rule.instruction, defaultTimeTaken);
+                instructionArr.push(instruction);
+            } else {
+                instruction = instructionArr[idx];
+            }
+
+            idx = instructionArr.findIndex(ins => ins.id === rule.prerequisite);
+
+            if (idx === -1) {
+                prerequisite = new TimedInstruction(rule.prerequisite, defaultTimeTaken);
+                instructionArr.push(prerequisite);
+            } else {
+                prerequisite = instructionArr[idx];
+            }
+
+            instruction.prerequisites[prerequisite.id] = prerequisite;
+
+            // if (idx === -1) {
+            //     instruction = new TimedInstruction(rule.instruction, defaultTimeTaken);
+            //     prerequisite = new TimedInstruction(rule.prerequisite, defaultTimeTaken);
+            //     instruction.prerequisites[rule.prerequisite] = prerequisite;
+            //     instructionArr.push(instruction);
+            // } else {
+            //     prerequisite = new TimedInstruction(rule.prerequisite, defaultTimeTaken);
+            //     instructionArr[idx].prerequisites[rule.prerequisite] = prerequisite;
+            // }
+            //
+            // idx = instructionArr.findIndex(ins => ins.id === rule.prerequisite);
+            //
+            // if (idx === -1) {
+            //     instruction = new TimedInstruction(rule.prerequisite, defaultTimeTaken);
+            //     instructionArr.push(instruction);
+            // }
         });
 
         instructionArr.sort((a, b) => (a.id > b.id ? 1 : a.id < b.id ? -1 : 0));
@@ -157,24 +194,17 @@ export class Level7 extends LevelBase implements ILevel {
 
 export class Instruction {
     private readonly _id: string;
-    private readonly _timeToComplete: number;
-    private readonly _ids = ' ABCDEFGHIJKLMNOPQRSTUVWXUZ';
-    private _timeTaken: number;
     public prerequisites: { [id: string]: boolean };
+    public done: boolean;
 
-    constructor(id: string, defaultTimeToComplete: number = 0) {
+    constructor(id: string) {
         this._id = id;
         this.prerequisites = {};
-        this._timeToComplete = defaultTimeToComplete + this._ids.indexOf(id.toUpperCase());
-        this._timeTaken = 0;
+        this.done = false;
     }
 
     public get id(): string {
         return this._id;
-    }
-
-    public get timeToComplete(): number {
-        return this._timeToComplete;
     }
 
     public get isAvailable(): boolean {
@@ -186,12 +216,52 @@ export class Instruction {
 
         return keys.every(i => this.prerequisites[i] === true);
     }
+}
+
+export class TimedInstruction {
+    private readonly _id: string;
+    private readonly _timeToComplete: number;
+    private _timeTaken: number;
+    public prerequisites: { [id: string]: TimedInstruction };
+    private readonly _acceptableIds = ' ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+    constructor(id: string, defaultTimeToComplete: number) {
+        if (!id || id.length !== 1 || this._acceptableIds.indexOf(id) === -1) {
+            throw new Error(`Could not create Instruction. Invalid ID '${id}'`);
+        }
+
+        this._id = id;
+        this.prerequisites = {};
+        this._timeToComplete = defaultTimeToComplete + this._acceptableIds.indexOf(id.toUpperCase());
+        this._timeTaken = 0;
+    }
+
+    public get id(): string {
+        return this._id;
+    }
+
+    public get timeLeft(): number {
+        return this._timeToComplete - this._timeTaken;
+    }
 
     public get done(): boolean {
         return this._timeTaken >= this._timeToComplete;
     }
 
-    public tick(): void {
-        this._timeTaken++;
+    public addTime(seconds: number): void {
+        this._timeTaken += seconds;
+    }
+
+    public get isAvailable(): boolean {
+        const keys = Object.keys(this.prerequisites);
+        let prerequisitesDone: boolean;
+
+        if (keys.length === 0) {
+            return true;
+        }
+
+        prerequisitesDone = keys.every(i => this.prerequisites[i].done);
+
+        return prerequisitesDone;
     }
 }
