@@ -1,15 +1,12 @@
 import { BaseRoute } from './baseRoute';
 import { NextFunction, Request, Response, Router } from 'express';
-import { ILevel, Level1, Level2, Level3, Level4, Level5, Level6, Level7} from '../lib/levels/';
+import { ILevel, Level1, Level2, Level3, Level4, Level5, Level6, Level7, Level8 } from '../lib/levels/';
 
 export class SolveRoute extends BaseRoute {
     public static create(router: Router) {
-        router.get(
-            '/solve/:level/:subLevel',
-            (req: Request, res: Response, next: NextFunction) => {
-                new SolveRoute().index(req, res, next);
-            }
-        );
+        router.get('/solve/:level/:subLevel', (req: Request, res: Response, next: NextFunction) => {
+            new SolveRoute().index(req, res, next);
+        });
     }
 
     constructor() {
@@ -52,6 +49,9 @@ export class SolveRoute extends BaseRoute {
             case 7:
                 lvlClass = new Level7();
                 break;
+            case 8:
+                lvlClass = new Level8();
+                break;
             default:
                 lvlClass = <ILevel>{
                     solve1(): string {
@@ -73,5 +73,9 @@ export class SolveRoute extends BaseRoute {
             subLvl: subLevel,
             solution: solution
         });
+
+        if (next) {
+            next();
+        }
     }
 }
