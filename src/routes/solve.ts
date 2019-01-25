@@ -4,7 +4,7 @@ import { ILevel, Level1, Level2, Level3, Level4, Level5, Level6, Level7, Level8 
 
 export class SolveRoute extends BaseRoute {
     public static create(router: Router) {
-        router.get('/solve/:level/:subLevel', (req: Request, res: Response, next: NextFunction) => {
+        router.get('/solve/:day([1-9]|1[0-9]|2[0-5])/:part(1|2)', (req: Request, res: Response, next: NextFunction) => {
             new SolveRoute().index(req, res, next);
         });
     }
@@ -14,20 +14,13 @@ export class SolveRoute extends BaseRoute {
     }
 
     public index(req: Request, res: Response, next: NextFunction) {
-        let level = parseInt(req.params.level, 10);
-        let subLevel = parseInt(req.params.subLevel, 10);
+        const day = parseInt(req.params.day, 10);
+        const part = parseInt(req.params.part, 10);
         let solution = 'Not solved';
         let lvlClass: ILevel;
+        let levelFound = true;
 
-        if (Number.isNaN(level)) {
-            level = 1;
-        }
-
-        if (Number.isNaN(subLevel)) {
-            subLevel = 1;
-        }
-
-        switch (level) {
+        switch (day) {
             case 1:
                 lvlClass = new Level1();
                 break;
@@ -53,6 +46,7 @@ export class SolveRoute extends BaseRoute {
                 lvlClass = new Level8();
                 break;
             default:
+                levelFound = false;
                 lvlClass = <ILevel>{
                     solve1(): string {
                         return solution;
@@ -64,15 +58,17 @@ export class SolveRoute extends BaseRoute {
                 break;
         }
 
-        if (lvlClass) {
-            solution = subLevel === 2 ? lvlClass.solve2() : lvlClass.solve1();
-        }
+        if (levelFound) {
+            solution = part === 2 ? lvlClass.solve2() : lvlClass.solve1();
 
-        res.render('solution', {
-            lvl: level,
-            subLvl: subLevel,
-            solution: solution
-        });
+            res.render('solution', {
+                day: day,
+                part: part,
+                solution: solution
+            });
+        } else {
+            res.render('not-done');
+        }
 
         if (next) {
             next();

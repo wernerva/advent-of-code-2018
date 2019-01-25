@@ -1,37 +1,13 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Advent of Code 2018</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1>Advent of Code 2018</h1>
-    <ul>
-      <li>Day 1: <a href="/solve/1/1">part 1</a>, <a href="/solve/1/2">part 2</a></li>
-      <li>Day 2: <a href="/solve/2/1">part 1</a>, <a href="/solve/2/2">part 2</a></li>
-      <li>Day 3: <a href="/solve/3/1">part 1</a>, <a href="/solve/3/2">part 2</a></li>
-      <li>Day 4: <a href="/solve/4/1">part 1</a>, <a href="/solve/4/2">part 2</a></li>
-      <li>Day 5: <a href="/solve/5/1">part 1</a>, <a href="/solve/5/2">part 2</a></li>
-      <li>Day 6: <a href="/solve/6/1">part 1</a>, <a href="/solve/6/2">part 2</a></li>
-      <li>Day 7: <a href="/solve/7/1">part 1</a>, <a href="/solve/7/2">part 2</a></li>
-      <li>Day 8: <a href="/solve/8/1">part 1</a>, <a href="/solve/8/2">part 2</a></li>
-      <li>Day 9: <a href="/solve/9/1">part 1</a>, <a href="/solve/9/2">part 2</a></li>
-      <li>Day 10: <a href="/solve/10/1">part 1</a>, <a href="/solve/10/2">part 2</a></li>
-      <li>Day 11: <a href="/solve/11/1">part 1</a>, <a href="/solve/11/2">part 2</a></li>
-      <li>Day 12: <a href="/solve/12/1">part 1</a>, <a href="/solve/12/2">part 2</a></li>
-      <li>Day 13: <a href="/solve/13/1">part 1</a>, <a href="/solve/13/2">part 2</a></li>
-      <li>Day 14: <a href="/solve/14/1">part 1</a>, <a href="/solve/14/2">part 2</a></li>
-      <li>Day 15: <a href="/solve/15/1">part 1</a>, <a href="/solve/15/2">part 2</a></li>
-      <li>Day 16: <a href="/solve/16/1">part 1</a>, <a href="/solve/16/2">part 2</a></li>
-      <li>Day 17: <a href="/solve/17/1">part 1</a>, <a href="/solve/17/2">part 2</a></li>
-      <li>Day 18: <a href="/solve/18/1">part 1</a>, <a href="/solve/18/2">part 2</a></li>
-      <li>Day 19: <a href="/solve/19/1">part 1</a>, <a href="/solve/19/2">part 2</a></li>
-      <li>Day 20: <a href="/solve/20/1">part 1</a>, <a href="/solve/20/2">part 2</a></li>
-      <li>Day 21: <a href="/solve/21/1">part 1</a>, <a href="/solve/21/2">part 2</a></li>
-      <li>Day 22: <a href="/solve/22/1">part 1</a>, <a href="/solve/22/2">part 2</a></li>
-      <li>Day 23: <a href="/solve/23/1">part 1</a>, <a href="/solve/23/2">part 2</a></li>
-      <li>Day 24: <a href="/solve/24/1">part 1</a>, <a href="/solve/24/2">part 2</a></li>
-      <li>Day 25: <a href="/solve/25/1">part 1</a>, <a href="/solve/25/2">part 2</a></li>
-    </ul>
-  </body>
-</html>
+<%- include('partials/html_start') -%>
+<h1>Advent of Code 2018</h1>
+<p>Below are my the solutions to the <a href="https://adventofcode.com/2018" target="_blank">2018 Advent of Code
+        challenge</a>. I only started my attempts well after the 25 of December 2018, but hey, it's still a fun
+    challenge.</p>
+<p>Truth be told looking at the answers is of little use. The real value is in the source code. You can view the source
+    code over on my <a href="https://github.com/wernerva/advent-of-code-2018">GitHub repo</a>.<p>
+<ul>
+    <% for (var i = 1; i <= maxDay; i++) { %>
+    <li>Day <%= i %> <a href="/solve/<%= i %>/1">part 1</a>, <a href="/solve/<%= i %>/2">part 2</a></li>
+    <% } %>
+</ul>
+<% include partials/html_end %>
