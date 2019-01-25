@@ -1,10 +1,11 @@
 <%- include('partials/html_start') -%>
 <% var inc = `challenges/day${day}`; %>
-<h1>Advent of Code 2018 part <%= part %></h1>
 <%- include(inc) -%>
 <p><b>Solution:</b> <%- solution %></p>
+<div class="solutionFooter">
 <% if (part === 1) { %><a href="./2">Part 2</a>
 <% } else { %><a href="./1">Part 1</a>
 <% } %>
 | <a href="../../..">Back to index</a>
+</div>
 <% include partials/html_end %>

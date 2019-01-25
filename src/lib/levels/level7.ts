@@ -81,9 +81,9 @@ export class Level7 extends LevelBase implements ILevel {
 
             log +=
                 '<div>' +
-                `</div><div style="display: inline-block; width: 50px; text-align: right;">${timeTaken}: &nbsp;</div>` +
-                `<div style="display: inline-block; width: 70px;">${workers.map(i => i.id).join(' ')}</div>` +
-                `<div style="display: inline-block; width: 500px;"> =&gt; ${result}</div>` +
+                `<div style="display: inline-block; width: 50px; text-align: right;">${timeTaken}:&nbsp;</div>` +
+                `<div style="display: inline-block; width: 90px;">${workers.map(i => i.id).join(' ')}</div>` +
+                `<div style="display: inline-block; width: 300px;"> =&gt; ${result}</div>` +
                 '</div>';
 
             workers = workers.filter(w => !w.done);
