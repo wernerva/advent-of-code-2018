@@ -3,27 +3,28 @@
 html, body {
   background-color: $bg-color;
   color: $primary-color;
-  font: 1.0em 'Share Tech Mono', monospace;
+  font: 1.1em monospace;
   text-shadow: 0 0 5px $primary-color;
 }
 
 h1, h2, h3 {
   border-bottom: $primary-color dashed;
   border-bottom-width: medium;
+  font-weight: 600;
 }
 
 h1 {
-  font-size: 1.5em;
+  font-size: 1.8em;
   max-width: $max-container-width;
 }
 
 h2 {
-  font-size: 1.2em;
+  font-size: 1.5em;
   width: fit-content;
 }
 
 h3 {
-  font-size: 1.0em;
+  font-size: 1.1em;
   width: fit-content;
 }
 
@@ -69,7 +70,7 @@ ul.vIndex {
 }
 
 code {
-  //border: 1px dashed $primary-color;
+  font: 1.1em monospace;
   display: inline-block;
   padding: 0 3px;
   background-color: $primary-color;
