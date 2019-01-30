@@ -6,6 +6,8 @@
 <% if (part === 1) { %><a href="./2">Part 2</a>
 <% } else { %><a href="./1">Part 1</a>
 <% } %>
-| <a href="../../..">Back to index</a>
+    <% if (day > 1) { %>| <a href="../<%= day - 1 %>/1"> Previous day</a><% } %>
+    <% if (day < 25) { %>| <a href="../<%= day + 1 %>/1"> Next day</a><% } %>
+    | <a href="../../..">Back to index</a>
 </div>
 <% include partials/html_end %>
