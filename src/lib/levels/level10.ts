@@ -1,8 +1,5 @@
 import { ILevel } from './iLevel';
 import { LevelBase } from './levelBase';
-import { isNegativeNumberLiteral } from 'tslint';
-import { isMainThread } from 'worker_threads';
-import { strict } from 'assert';
 
 export class Level10 extends LevelBase implements ILevel {
     public readonly input: Vector[];

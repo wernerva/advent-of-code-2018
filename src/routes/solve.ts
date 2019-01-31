@@ -4,6 +4,7 @@ import {
     ILevel,
     Level1,
     Level10,
+    Level11,
     Level2,
     Level3,
     Level4,
@@ -62,6 +63,9 @@ export class SolveRoute extends BaseRoute {
                 break;
             case 10:
                 lvlClass = new Level10();
+                break;
+            case 11:
+                lvlClass = new Level11();
                 break;
             default:
                 levelFound = false;
