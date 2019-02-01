@@ -14,7 +14,7 @@ export class IndexRoute extends BaseRoute {
 
     public index(req: Request, res: Response, next: NextFunction) {
         // this.render(req, res, 'index');
-        res.render('index', { maxDay: 11 });
+        res.render('index', { maxDay: 12 });
 
         if (next) {
             next();
