@@ -7,6 +7,7 @@ import {
     Level11,
     Level12,
     Level13,
+    Level14,
     Level2,
     Level3,
     Level4,
@@ -74,6 +75,9 @@ export class SolveRoute extends BaseRoute {
                 break;
             case 13:
                 lvlClass = new Level13();
+                break;
+            case 14:
+                lvlClass = new Level14();
                 break;
             default:
                 levelFound = false;
